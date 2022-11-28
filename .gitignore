@@ -1,0 +1,8 @@
+conll_data_en
+__pycache__
+LM
+model_checkpoints
+plots
+validation_checkpoints
+word_embeddings_cache
+*.pt

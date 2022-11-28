@@ -1,0 +1,27 @@
+device: 'cuda:0'
+pretrained_model: ""
+
+embedding_dim: 1024
+hidden_dim: 100
+learning_rate: 0.001
+warmup: 50
+epocs: 50
+
+train_data: "conll_data_en/train.pkl"
+validation_data: "conll_data_en/validation.pkl"
+test_data: "conll_data_en/test.pkl"
+validation_true_tags: "conll_data_en/validation_tag.pkl"
+
+embedding_mode: "Bert"
+embedding_path: "./word_embeddings/vecmap-glove-fasttext-720000/SRC-EN.vec-718000.txt"
+load_last_embeddings: true
+train_embeddings: "word_embeddings_cache/train_embeddings.pt"
+validation_embeddings: "word_embeddings_cache/validation_embeddings.pt"
+embedding_token_heuristic: "mean"
+
+best_model_path: "best_model.pt"
+model_checkpoints_path: ""
+validation_checkpoints_path: "validation_checkpoints/"
+plots_dir: "plots/"
+
+optimizer_path: ""
