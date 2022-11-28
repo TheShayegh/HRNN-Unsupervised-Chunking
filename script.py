@@ -9,8 +9,8 @@ from word_embeddings import get_embeddings
 import numpy as np
 
 
-def _train(model, data, optimizer, name, losses, device):
-    loss = train(model, data, optimizer, device=device)
+def _train(model, data, optimizer, scheduler, name, losses, device):
+    loss = train(model, data, optimizer, scheduler, device=device)
     print( " __________________________________")
     print(f"| Train epoch {name}:")
     print(f"|     Loss:     {loss}")
@@ -19,7 +19,7 @@ def _train(model, data, optimizer, name, losses, device):
 
 
 def _validate(model, data, true_tags, config, name, losses, fscores, accs, device):
-    loss, validation_output = validate(model, data, device=device)
+    loss, validation_output = validate(model, data, true_tags, device=device)
     fscore, acc = eval_conll2000(validation_output)
     if config['validation_checkpoints_path']:
         pred_path = config['validation_checkpoints_path'] + 'validation-' + str(name) + '.out'
@@ -84,9 +84,8 @@ def main():
 
     for epoch in range(config['epocs']):
         print(f"============================ Epoch {epoch} ============================")
-        _train(hrnn_model, training_data, optimizer, epoch, train_loss_vec, device=device)
+        _train(hrnn_model, training_data, optimizer, scheduler, epoch, train_loss_vec, device=device)
         fscore = _validate(hrnn_model, validation_data, validation_true_tags, config, epoch, *validation_records, device=device)
-        scheduler.step()
         print('LR:', scheduler.get_last_lr())
 
         if fscore > best_fscore:

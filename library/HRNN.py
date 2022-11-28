@@ -151,6 +151,7 @@ def train(
     model: HRNNtagger,
     data,
     optimizer,
+    scheduler,
     device,
 ) -> float:
     model.train()
@@ -159,9 +160,10 @@ def train(
     for batch in tqdm(bucket_iterator.batches, total=len(bucket_iterator)):
         hc = model.init_hidden().to(device)
         _, loss = _forward(model, batch, hc, device)
-        loss_sum += loss.item()
         loss.backward()
         optimizer.step()
+        loss_sum += loss.item()
+    scheduler.step()
     return loss_sum / len(bucket_iterator)
 
 
@@ -186,7 +188,7 @@ def validate(
             loss_sum += loss.item()
             ind = torch.argmax(tag_scores, dim=1)
             for i, pred in enumerate(ind[:-1]):
-                true_label = "B" if true_tag[i+1] else "I"
+                true_label = true_tag[i+1]
                 predicted_label = "B" if pred else "I"
                 output += f"x y {true_label} {predicted_label}\n"
     return loss_sum / len(bucket_iterator), output
