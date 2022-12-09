@@ -1,7 +1,8 @@
 device: 'cuda:0'
 pretrained_model: ""
 
-embedding_dim: 1024
+# embedding_dim: 1024
+embedding_dim: 300
 hidden_dim: 100
 learning_rate: 0.001
 warmup: 50
@@ -11,17 +12,23 @@ train_data: "conll_data_en/train.pkl"
 validation_data: "conll_data_en/validation.pkl"
 test_data: "conll_data_en/test.pkl"
 validation_true_tags: "conll_data_en/validation_tag.pkl"
+test_true_tags: "conll_data_en/test_tag.pkl"
 
-embedding_mode: "Bert"
-embedding_path: "./word_embeddings/vecmap-glove-fasttext-720000/SRC-EN.vec-718000.txt"
-load_last_embeddings: true
+# embedding_mode: "Bert"
+embedding_mode: "file"
+embedding_path: "./en_fa_word_embeddings/EN.txt"
+# embedding_path: "./en_fa_word_embeddings/FA.txt"
+load_last_embeddings: false
+load_last_test_embeddings: false
 train_embeddings: "word_embeddings_cache/train_embeddings.pt"
 validation_embeddings: "word_embeddings_cache/validation_embeddings.pt"
+test_embeddings: "word_embeddings_cache/test_embeddings.pt"
 embedding_token_heuristic: "mean"
 
 best_model_path: "best_model.pt"
 model_checkpoints_path: ""
 validation_checkpoints_path: "validation_checkpoints/"
+test_output_path: "validation_checkpoints/test.out"
 plots_dir: "plots/"
 
 optimizer_path: ""

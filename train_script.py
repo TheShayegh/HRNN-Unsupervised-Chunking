@@ -2,7 +2,6 @@ import yaml
 import sys
 import pickle
 import torch
-# from transformers import *
 from library.utils import data_padding, build_vocab
 from library.HRNN import HRNNtagger, get_training_equipments, train, validate, eval_conll2000
 from word_embeddings import get_embeddings

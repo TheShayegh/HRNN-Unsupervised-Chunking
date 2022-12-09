@@ -6,3 +6,4 @@ plots
 validation_checkpoints
 word_embeddings_cache
 *.pt
+en_fa_word_embeddings
