@@ -3,7 +3,12 @@ __pycache__
 LM
 model_checkpoints
 plots
-validation_checkpoints
 word_embeddings_cache
 *.pt
 en_fa_word_embeddings
+chunk_data_fa/*.pickle
+chunk_data_fa/*.pkl
+*_checkpoints
+*.out
+*val_metrics.pkl
+*train_loss.pkl

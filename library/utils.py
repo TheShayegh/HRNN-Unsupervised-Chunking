@@ -25,7 +25,7 @@ def build_vocab(data):
 				word_to_ix[word] = len(word_to_ix)
 	
 	ix_to_word = {v: k for k, v in word_to_ix.items()}
-	tag_to_ix = {"<pad>": 0, "1": 1, "2": 2}
+	tag_to_ix = {"<pad>": 0, "1": 1, "2": 2, "3": 3}
 	ix_to_tag = {v: k for k, v in tag_to_ix.items()}
 
 	return word_to_ix, ix_to_word, tag_to_ix, ix_to_tag

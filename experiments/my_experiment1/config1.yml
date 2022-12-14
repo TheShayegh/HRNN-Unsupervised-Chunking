@@ -1,0 +1,34 @@
+# Pretrain the model using EN data
+
+device: 'cuda:0'
+pretrained_model: ""
+
+embedding_dim: 300
+hidden_dim: 100
+learning_rate: 0.001
+warmup: 10
+epocs: 10
+
+train_data: "conll_data_en/train.pkl"
+validation_data: "conll_data_en/validation.pkl"
+test_data: "conll_data_en/test.pkl"
+validation_true_tags: "conll_data_en/validation_tag.pkl"
+test_true_tags: "conll_data_en/test_tag.pkl"
+
+embedding_mode: "file"
+embedding_path: "./en_fa_word_embeddings/EN.txt"
+load_last_embeddings: true
+load_last_test_embeddings: true
+train_embeddings: "experiments/my_experiment1/word_embeddings_cache/en_train_embeddings.pt"
+validation_embeddings: "experiments/my_experiment1/word_embeddings_cache/en_validation_embeddings.pt"
+test_embeddings: "experiments/my_experiment1/word_embeddings_cache/en_test_embeddings.pt"
+embedding_token_heuristic: "mean"
+
+best_model_path: "posttrained_model.pt"
+model_checkpoints_path: ""
+validation_checkpoints_path: "experiments/my_experiment1/en_validation_checkpoints/"
+test_output_path: "experiments/my_experiment1/en_test.out"
+train_loss: "experiments/my_experiment1/en_train_loss.pkl"
+validation_metrics: "experiments/my_experiment1/en_val_metrics.pkl"
+
+optimizer_path: ""

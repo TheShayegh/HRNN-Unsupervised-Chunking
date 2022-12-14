@@ -37,7 +37,7 @@ class HRNNtagger(nn.ModuleList):
         self.rnn11 = nn.RNNCell(self.embedding_dim, self.hidden_dim).to(self.device)
         self.rnn12 = nn.RNNCell(self.embedding_dim, self.hidden_dim).to(self.device)
         self.rnn21 = nn.RNNCell(self.hidden_dim, self.hidden_dim).to(self.device)
-        self.hidden2tag = nn.Linear(self.hidden_dim+self.hidden_dim+self.embedding_dim, self.tagset_size - 1).to(self.device)
+        self.hidden2tag = nn.Linear(self.hidden_dim+self.hidden_dim+self.embedding_dim, self.tagset_size).to(self.device)
         self.soft = nn.Softmax(dim=1).to(self.device)
         
 
@@ -49,7 +49,7 @@ class HRNNtagger(nn.ModuleList):
         mask_ind = 1,
     ) -> tuple[torch.Tensor, torch.Tensor]:
 
-        output_seq = torch.zeros((seqlens, self.tagset_size - 1)).to(self.device)
+        output_seq = torch.zeros((seqlens, self.tagset_size)).to(self.device)
 
         h11 = h_init.to(self.device)
         h12 = h_init.to(self.device)
@@ -98,9 +98,14 @@ def get_training_equipments(
     warmup: int,
 ) -> tuple[torch.optim.Optimizer, transformers.SchedulerType]:
     optimizer = optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
-    scheduler = transformers.get_cosine_schedule_with_warmup(optimizer, 
-        num_warmup_steps = warmup, num_training_steps = num_iter, 
-        num_cycles = 0.5, last_epoch = - 1)
+    scheduler = transformers.get_cosine_schedule_with_warmup(
+        optimizer, 
+        num_warmup_steps=warmup,
+        num_training_steps=num_iter,
+        num_cycles=0.5,
+        last_epoch=-1
+    )
+    scheduler.step()
     return optimizer, scheduler
 
 
@@ -136,11 +141,13 @@ def _forward(
     seqlens = torch.as_tensor(torch.count_nonzero(tag, dim=-1), dtype=torch.int64, device='cpu')+2
     tag = (tag - 1)[1:seqlens-1]
 
-    model.zero_grad()    
+    model.zero_grad()
     tag_scores,_ = model(hc, embedding, seqlens)
     tag_scores = torch.log(tag_scores[1:seqlens-1])
 
-    loss = model.criterion(tag_scores, tag)
+    selection = (tag != 2)
+
+    loss = model.criterion(tag_scores[selection], tag[selection])
     return tag_scores, loss # predicted probs, true tags, loss
 
 
@@ -182,13 +189,15 @@ def validate(
     bucket_iterator = make_bucket_iterator(data, device=device)
     output = ""
     with torch.no_grad():
-        output += "x y B B\n"
         for batch, true_tag in tqdm(zip(bucket_iterator.batches, true_tags), total=len(bucket_iterator)):
+            output += "x y B B\n"
             tag_scores, loss = _forward(model, batch, hc, device)
             loss_sum += loss.item()
             ind = torch.argmax(tag_scores, dim=1)
             for i, pred in enumerate(ind[:-1]):
                 true_label = true_tag[i+1]
+                if true_label not in ["B", "I"]:
+                    continue
                 predicted_label = "B" if pred else "I"
                 output += f"x y {true_label} {predicted_label}\n"
     return loss_sum / len(bucket_iterator), output

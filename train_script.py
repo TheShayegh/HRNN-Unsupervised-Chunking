@@ -8,13 +8,17 @@ from word_embeddings import get_embeddings
 import numpy as np
 
 
-def _train(model, data, optimizer, scheduler, name, losses, device):
+def _train(model, data, optimizer, scheduler, config, name, losses, device):
     loss = train(model, data, optimizer, scheduler, device=device)
     print( " __________________________________")
     print(f"| Train epoch {name}:")
     print(f"|     Loss:     {loss}")
     print( "|__________________________________")
     losses.append(loss)
+    if config['train_loss']:
+        with open(config['train_loss'], 'wb') as f:
+            pickle.dump(losses, f)
+    return loss
 
 
 def _validate(model, data, true_tags, config, name, losses, fscores, accs, device):
@@ -33,6 +37,14 @@ def _validate(model, data, true_tags, config, name, losses, fscores, accs, devic
     losses.append(loss)
     fscores.append(fscore)
     accs.append(acc)
+    if config['validation_metrics']:
+        plot_vars = {
+            'loss': losses,
+            'fscore': fscores,
+            'acc': accs,
+        }
+        with open(config['validation_metrics'], 'wb') as f:
+            pickle.dump(plot_vars, f)
     return fscore
     
 
@@ -57,9 +69,11 @@ def main():
         training_embeddings = torch.load(config['train_embeddings'], map_location=device)
     else:
         validation_embeddings = get_embeddings(validation_tokens.to(device), ix_to_word, config, device)
-        torch.save(validation_embeddings, config['validation_embeddings'])
+        if config['validation_embeddings']:
+            torch.save(validation_embeddings, config['validation_embeddings'])
         training_embeddings = get_embeddings(train_tokens.to(device), ix_to_word, config, device)
-        torch.save(training_embeddings, config['train_embeddings'])
+        if config['train_embeddings']:
+            torch.save(training_embeddings, config['train_embeddings'])
 
     training_data = list(zip(training_embeddings, train_tags))
     validation_data = list(zip(validation_embeddings, validation_tags))
@@ -67,7 +81,7 @@ def main():
     hrnn_model = HRNNtagger(
         embedding_dim=config['embedding_dim'],
         hidden_dim=config['hidden_dim'],
-        tagset_size=len(tag_to_ix),
+        tagset_size=2,
         device=device,
     ).to(device)
     optimizer, scheduler = get_training_equipments(hrnn_model, lr=config['learning_rate'], num_iter=config['epocs'], warmup=config['warmup'])
@@ -79,33 +93,30 @@ def main():
 
     if config['pretrained_model']:
         hrnn_model.load_state_dict(torch.load(config['pretrained_model'], map_location=torch.device(device)))
-        _validate(hrnn_model, validation_data, validation_true_tags, config, 'pre-trained', *validation_records, device=device)
+    _validate(
+        hrnn_model,
+        validation_data,
+        validation_true_tags,
+        config,
+        'pre-trained' if config['pretrained_model'] else 'init model',
+        *validation_records,
+        device=device
+    )
 
     for epoch in range(config['epocs']):
         print(f"============================ Epoch {epoch} ============================")
-        _train(hrnn_model, training_data, optimizer, scheduler, epoch, train_loss_vec, device=device)
-        fscore = _validate(hrnn_model, validation_data, validation_true_tags, config, epoch, *validation_records, device=device)
         print('LR:', scheduler.get_last_lr())
-
-        if fscore > best_fscore:
-            best_fscore = fscore
-            torch.save(hrnn_model.state_dict(), config['best_model_path'])	
+        _train(hrnn_model, training_data, optimizer, scheduler, config, epoch, train_loss_vec, device=device)
+        fscore = _validate(hrnn_model, validation_data, validation_true_tags, config, epoch, *validation_records, device=device)
 
         if config['model_checkpoints_path'] and ( (epoch+1)%10 == 0 ):
             torch.save(hrnn_model.state_dict(), config['model_checkpoints_path']+'hrnn'+str(epoch)+'.pt')
-
         if config['optimizer_path']:
             torch.save(optimizer.state_dict(), config['optimizer_path'])
 
-        if config['plots_dir']:
-            plot_vars = {
-                'train_loss_vec': train_loss_vec,
-                'validation_loss_vec': validation_loss_vec,
-                'validation_fscore_vec': validation_fscore_vec,
-                'validation_acc_vec': validation_acc_vec,
-            }
-            with open(config['plots_dir']+'plot-data.pkl', 'wb') as f:
-                pickle.dump(plot_vars, f)
+        if fscore > best_fscore:
+            best_fscore = fscore
+            torch.save(hrnn_model.state_dict(), config['best_model_path'])
 
 
 if __name__ == "__main__":

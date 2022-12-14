@@ -1,0 +1,34 @@
+# Train the model using FA data: All the input embeddings are ones ([1, 1, 1, ...])
+
+device: 'cuda:0'
+pretrained_model: ""
+
+embedding_dim: 300
+hidden_dim: 100
+learning_rate: 0.01
+warmup: 50
+epocs: 10
+
+train_data: "chunk_data_fa/train.pkl"
+validation_data: "chunk_data_fa/validation.pkl"
+test_data: "chunk_data_fa/test.pkl"
+validation_true_tags: "chunk_data_fa/validation_tag.pkl"
+test_true_tags: "chunk_data_fa/test_tag.pkl"
+
+embedding_mode: "allones"
+embedding_path: "./en_fa_word_embeddings/FA.txt"
+load_last_embeddings: false
+load_last_test_embeddings: false
+train_embeddings: ""
+validation_embeddings: ""
+test_embeddings: ""
+embedding_token_heuristic: "mean"
+
+best_model_path: "best_model.pt"
+model_checkpoints_path: ""
+validation_checkpoints_path: "experiments/experiment_all_inputs_ones/fa_validation_checkpoints/"
+test_output_path: "experiments/experiment_all_inputs_ones/fa_test.out"
+train_loss: "experiments/experiment_all_inputs_ones/fa_train_loss.pkl"
+validation_metrics: "experiments/experiment_all_inputs_ones/fa_val_metrics.pkl"
+
+optimizer_path: ""

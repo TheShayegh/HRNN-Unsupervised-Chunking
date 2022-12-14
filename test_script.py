@@ -40,7 +40,8 @@ def main():
         test_embeddings = torch.load(config['test_embeddings'], map_location=device)
     else:
         test_embeddings = get_embeddings(test_tokens.to(device), ix_to_word, config, device)
-        torch.save(test_embeddings, config['test_embeddings'])
+        if config['test_embeddings']:
+            torch.save(test_embeddings, config['test_embeddings'])
 
     test_data = list(zip(test_embeddings, test_tags))
 

@@ -19,6 +19,8 @@ def get_embeddings(
         return compute_emb_by_bert(data_tokens, ix_to_word, config=config, device=device)
     elif config['embedding_mode'].lower()=='file':
         return compute_emb_from_file(data_tokens, ix_to_word, config=config, device=device)
+    elif config['embedding_mode'].lower()=='allones':
+        return torch.ones([len(data_tokens), len(data_tokens[0]), 300]) 
 
 
 @timing_logger
