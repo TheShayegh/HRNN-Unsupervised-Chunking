@@ -48,7 +48,7 @@ def main():
     hrnn_model = HRNNtagger(
         embedding_dim=config['embedding_dim'],
         hidden_dim=config['hidden_dim'],
-        tagset_size=len(tag_to_ix),
+        tagset_size=2,
         device=device,
     ).to(device)
     hrnn_model.load_state_dict(torch.load(config['best_model_path'], map_location=torch.device(device)))

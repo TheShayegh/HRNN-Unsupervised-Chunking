@@ -176,6 +176,70 @@ def train(
 
 
 
+def validation_output(
+    ind,
+    true_tag,
+) -> str:
+    output = "x y B B\n"
+    for i, pred in enumerate(ind[:-1]):
+        true_label = true_tag[i+1]
+        if true_label not in ["B", "I"]:
+            continue
+        predicted_label = "B" if pred else "I"
+        output += f"x y {true_label} {predicted_label}\n"
+    return output
+
+
+
+
+def enforced_validation_output(
+    ind,
+    true_tag,
+    enforced_tags,
+) -> str:
+    if enforced_tags[0] in ["B", "I"]:
+        output += f"x y B {enforced_tags[0]}\n"
+    else:
+        output += f"x y B B\n"
+    for i, pred in enumerate(ind[:-1]):
+        true_label = true_tag[i+1]
+        if true_label not in ["B", "I"]:
+            continue
+        if enforced_tags[i+1] in ["B", "I"]:
+            predicted_label = enforced_tags[i+1]
+        else:
+            predicted_label = "B" if pred else "I"
+        output += f"x y {true_label} {predicted_label}\n"
+    return output
+
+
+
+
+def enforced_Bstarting_validation_output(
+    ind,
+    true_tag,
+    enforced_tags,
+) -> str:
+    if enforced_tags[0] in ["B", "I"]:
+        output += f"x y B {enforced_tags[0]}\n"
+    else:
+        output += f"x y B B\n"
+    for i, pred in enumerate(ind[:-1]):
+        true_label = true_tag[i+1]
+        if true_label not in ["B", "I"]:
+            continue
+        if enforced_tags[i+1] in ["B", "I"]:
+            predicted_label = enforced_tags[i+1]
+        elif enforced_tags[i] in ["B", "I"]:
+            predicted_label = "B"
+        else:
+            predicted_label = "B" if pred else "I"
+        output += f"x y {true_label} {predicted_label}\n"
+    return output
+
+
+
+
 @timing_logger
 def validate(
     model: HRNNtagger,
@@ -183,6 +247,8 @@ def validate(
     true_tags,
     device,
 ) -> tuple[float, str]:
+    if config['validation_mode'].lower() == 'enforced':
+        enforced_tags = pickle.load(open(config['enforced_validation_tags'], "rb"))
     model.eval()
     hc = model.init_hidden().to(device)
     loss_sum = 0.
@@ -194,12 +260,13 @@ def validate(
             tag_scores, loss = _forward(model, batch, hc, device)
             loss_sum += loss.item()
             ind = torch.argmax(tag_scores, dim=1)
-            for i, pred in enumerate(ind[:-1]):
-                true_label = true_tag[i+1]
-                if true_label not in ["B", "I"]:
-                    continue
-                predicted_label = "B" if pred else "I"
-                output += f"x y {true_label} {predicted_label}\n"
+            if config['validation_mode'].lower() == 'normal':
+                output += validation_output(ind, true_tag)
+            elif config['validation_mode'].lower() == 'enforced':
+                if config['enforced_mode'].lower() == 'Bstarting':
+                    output += enforced_Bstarting_validation_output(ind, true_tag, enforced_tags)
+                else:
+                    output += enforced_validation_output(ind, true_tag, enforced_tags)
     return loss_sum / len(bucket_iterator), output
 
 

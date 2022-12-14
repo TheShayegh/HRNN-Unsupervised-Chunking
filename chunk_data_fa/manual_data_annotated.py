@@ -36,3 +36,4 @@ for sentence, tag in validation_set[['sentence', 'Annotations']].values:
 validation_data = list(zip(validation_tokens, validation_tags))
 pkl.dump(validation_data, open("validation.pkl", 'wb'))
 pkl.dump([tag.split() for tag in validation_set['Annotations']], open("validation_tag.pkl", 'wb'))
+pkl.dump([[c[0] for c in tag.split()] for tag in validation_set["Paper's Tags"]], open("validation_noisy_tag.pkl", 'wb'))
