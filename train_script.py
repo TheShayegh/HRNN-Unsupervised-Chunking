@@ -22,7 +22,18 @@ def _train(model, data, optimizer, scheduler, config, name, losses, device):
 
 
 def _validate(model, data, true_tags, config, name, losses, fscores, accs, device):
-    loss, validation_output = validate(model, data, true_tags, device=device)
+    if config['validation_mode'].lower() == 'enforced':
+        enforced_tags = pickle.load(open(config['enforced_validation_tags'], "rb"))
+    else:
+        enforced_tags = None
+    loss, validation_output = validate(
+        model,
+        data,
+        true_tags,
+        device=device,
+        enforced_tags=enforced_tags,
+        enforced_mode=config['enforced_mode'].lower(),
+    )
     fscore, acc = eval_conll2000(validation_output)
     if config['validation_checkpoints_path']:
         pred_path = config['validation_checkpoints_path'] + 'validation-' + str(name) + '.out'

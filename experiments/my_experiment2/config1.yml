@@ -18,7 +18,7 @@ test_true_tags: "chunk_data_fa/test_tag.pkl"
 
 embedding_mode: "file"
 embedding_path: "./en_fa_word_embeddings/FA.txt"
-load_last_embeddings: true
+load_last_embeddings: false
 load_last_test_embeddings: false
 # train_embeddings: "experiments/my_experiment1/word_embeddings_cache/fa_train_embeddings_BinsteadO.pt"
 train_embeddings: "experiments/my_experiment1/word_embeddings_cache/fa_train_embeddings.pt"

@@ -197,6 +197,7 @@ def enforced_validation_output(
     true_tag,
     enforced_tags,
 ) -> str:
+    output = ""
     if enforced_tags[0] in ["B", "I"]:
         output += f"x y B {enforced_tags[0]}\n"
     else:
@@ -220,6 +221,7 @@ def enforced_Bstarting_validation_output(
     true_tag,
     enforced_tags,
 ) -> str:
+    output = ""
     if enforced_tags[0] in ["B", "I"]:
         output += f"x y B {enforced_tags[0]}\n"
     else:
@@ -246,27 +248,28 @@ def validate(
     data,
     true_tags,
     device,
+    enforced_mode: str = 'normal',
+    enforced_tags = None,
 ) -> tuple[float, str]:
-    if config['validation_mode'].lower() == 'enforced':
-        enforced_tags = pickle.load(open(config['enforced_validation_tags'], "rb"))
     model.eval()
     hc = model.init_hidden().to(device)
     loss_sum = 0.
     bucket_iterator = make_bucket_iterator(data, device=device)
     output = ""
     with torch.no_grad():
-        for batch, true_tag in tqdm(zip(bucket_iterator.batches, true_tags), total=len(bucket_iterator)):
+        for i, (batch, true_tag) in tqdm(enumerate(zip(bucket_iterator.batches, true_tags)), total=len(bucket_iterator)):
             output += "x y B B\n"
             tag_scores, loss = _forward(model, batch, hc, device)
             loss_sum += loss.item()
             ind = torch.argmax(tag_scores, dim=1)
-            if config['validation_mode'].lower() == 'normal':
+            if enforced_tags is None:
                 output += validation_output(ind, true_tag)
-            elif config['validation_mode'].lower() == 'enforced':
-                if config['enforced_mode'].lower() == 'Bstarting':
-                    output += enforced_Bstarting_validation_output(ind, true_tag, enforced_tags)
+            else:
+                enforced_tag = enforced_tags[i]
+                if enforced_mode == 'bstarting':
+                    output += enforced_Bstarting_validation_output(ind, true_tag, enforced_tag)
                 else:
-                    output += enforced_validation_output(ind, true_tag, enforced_tags)
+                    output += enforced_validation_output(ind, true_tag, enforced_tag)
     return loss_sum / len(bucket_iterator), output
 
 
