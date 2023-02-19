@@ -1,3 +1,5 @@
+# CUDA_VISIBLE_DEVICES=0 python3 train_script.py experiments/???/config.yml
+
 import yaml
 import sys
 import pickle
@@ -6,6 +8,7 @@ from library.utils import data_padding, build_vocab
 from library.HRNN import HRNNtagger, get_training_equipments, train, validate, eval_conll2000
 from word_embeddings import get_embeddings
 import numpy as np
+import os
 
 
 def _train(model, data, optimizer, scheduler, config, name, losses, device):
@@ -16,7 +19,7 @@ def _train(model, data, optimizer, scheduler, config, name, losses, device):
     print( "|__________________________________")
     losses.append(loss)
     if config['train_loss']:
-        with open(config['train_loss'], 'wb') as f:
+        with open(config['home']+config['train_loss'], 'wb') as f:
             pickle.dump(losses, f)
     return loss
 
@@ -36,7 +39,7 @@ def _validate(model, data, true_tags, config, name, losses, fscores, accs, devic
     )
     fscore, acc = eval_conll2000(validation_output)
     if config['validation_checkpoints_path']:
-        pred_path = config['validation_checkpoints_path'] + 'validation-' + str(name) + '.out'
+        pred_path = config['home']+config['validation_checkpoints_path'] + 'validation-' + str(name) + '.out'
         with open(pred_path, 'w') as f:
             f.write(validation_output)
     print( " __________________________________")
@@ -54,7 +57,7 @@ def _validate(model, data, true_tags, config, name, losses, fscores, accs, devic
             'fscore': fscores,
             'acc': accs,
         }
-        with open(config['validation_metrics'], 'wb') as f:
+        with open(config['home']+config['validation_metrics'], 'wb') as f:
             pickle.dump(plot_vars, f)
     return fscore
     
@@ -75,16 +78,22 @@ def main():
     word_to_ix, ix_to_word, tag_to_ix, ix_to_tag = build_vocab(training_data + validation_data)
     train_tokens, train_tags, train_msl = data_padding(training_data, word_to_ix, tag_to_ix, device=device)
     validation_tokens, validation_tags, validation_msl = data_padding(validation_data, word_to_ix, tag_to_ix, device=device)
-    if config['load_last_embeddings']:
-        validation_embeddings = torch.load(config['validation_embeddings'], map_location=device)
-        training_embeddings = torch.load(config['train_embeddings'], map_location=device)
+    
+    if config['load_last_embeddings'] and os.path.exists(config['home']+config['validation_embeddings']):
+        validation_embeddings = torch.load(config['home']+config['validation_embeddings'], map_location=device)
     else:
+        config['embedding_path'] = config['val_embedding_path']
         validation_embeddings = get_embeddings(validation_tokens.to(device), ix_to_word, config, device)
         if config['validation_embeddings']:
-            torch.save(validation_embeddings, config['validation_embeddings'])
+            torch.save(validation_embeddings, config['home']+config['validation_embeddings'])
+    
+    if config['load_last_embeddings'] and os.path.exists(config['home']+config['train_embeddings']):
+        training_embeddings = torch.load(config['home']+config['train_embeddings'], map_location=device)
+    else:
+        config['embedding_path'] = config['train_embedding_path']
         training_embeddings = get_embeddings(train_tokens.to(device), ix_to_word, config, device)
         if config['train_embeddings']:
-            torch.save(training_embeddings, config['train_embeddings'])
+            torch.save(training_embeddings, config['home']+config['train_embeddings'])
 
     training_data = list(zip(training_embeddings, train_tags))
     validation_data = list(zip(validation_embeddings, validation_tags))
@@ -103,7 +112,7 @@ def main():
     best_fscore = 0.
 
     if config['pretrained_model']:
-        hrnn_model.load_state_dict(torch.load(config['pretrained_model'], map_location=torch.device(device)))
+        hrnn_model.load_state_dict(torch.load(config['home']+config['pretrained_model'], map_location=torch.device(device)))
     _validate(
         hrnn_model,
         validation_data,
@@ -121,13 +130,13 @@ def main():
         fscore = _validate(hrnn_model, validation_data, validation_true_tags, config, epoch, *validation_records, device=device)
 
         if config['model_checkpoints_path'] and ( (epoch+1)%10 == 0 ):
-            torch.save(hrnn_model.state_dict(), config['model_checkpoints_path']+'hrnn'+str(epoch)+'.pt')
+            torch.save(hrnn_model.state_dict(), config['home']+config['model_checkpoints_path']+'hrnn'+str(epoch)+'.pt')
         if config['optimizer_path']:
-            torch.save(optimizer.state_dict(), config['optimizer_path'])
+            torch.save(optimizer.state_dict(), config['home']+config['optimizer_path'])
 
         if fscore > best_fscore:
             best_fscore = fscore
-            torch.save(hrnn_model.state_dict(), config['best_model_path'])
+            torch.save(hrnn_model.state_dict(), config['home']+config['best_model_path'])
 
 
 if __name__ == "__main__":

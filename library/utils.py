@@ -74,7 +74,7 @@ def select_indices(tokens, raw_tokens, model, mode):
     mask = []
     raw_i = 0
     collapsed = ''
-    model = model.split('-')[0]
+    model = model.split('/')[-1].split('-')[0]
     special = specials[model]
 
     for i in range(len(tokens)):
@@ -102,20 +102,46 @@ def select_indices(tokens, raw_tokens, model, mode):
 def group_indices(tokens, raw_tokens, model):
     mask = []
     raw_i = 0
-    collapsed = ''
-    model = model.split('-')[0]
+    model = model.split('/')[-1].split('-')[0]
     special = specials[model]
 
+    collapsed = ''
+    options = [raw_tokens[raw_i]]
+    skip = 0
+    collapsed_cnt = 0
+    # print(' '.join(raw_tokens))
     for i in range(len(tokens)):
         token = tokens[i]
 
         while len(token) > 0 and token[0] == special:
             token = token[1:]
-        collapsed += token
-        mask.append(raw_i)
-        if collapsed == raw_tokens[raw_i]:
-            raw_i += 1
-            collapsed = ''
+
+        collapsed_cnt += 1
+        if token != '[UNK]':
+            collapsed += token
+            if collapsed in options:
+                raw_tokens_cnt = options.index(collapsed)
+                for j in range(raw_tokens_cnt+1):
+                    mask.append(raw_i)
+                    raw_i += 1
+                for j in range(collapsed_cnt-raw_tokens_cnt-1):
+                    mask.append(raw_i-1)
+                if raw_i >= len(raw_tokens):
+                    if i != len(tokens)-1:
+                        raise Exception("Tokens more that tags.")
+                    break
+                options = [raw_tokens[raw_i]]
+                collapsed = ''
+                collapsed_cnt = 0
+                skip = 0
+        else:
+            if collapsed:
+                print(options)
+                raise Exception("Invalid token-tags!")
+            skip += 1
+            options.append(raw_tokens[raw_i+skip])
+
     if raw_i != len(raw_tokens):
+        print(options)
         return 
     return torch.tensor(mask)

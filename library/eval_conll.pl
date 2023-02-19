@@ -60,10 +60,7 @@ my @features;             # features on line
 my @sortedTypes;          # sorted list of chunk type names
 
 # sanity check
-#printf @ARGV[0];
-
 while (@ARGV and $ARGV[0] =~ /^-/) {
-
    if ($ARGV[0] eq "-l") { $latex = 1; shift(@ARGV); }
    elsif ($ARGV[0] eq "-r") { $raw = 1; shift(@ARGV); }
    elsif ($ARGV[0] eq "-d") { 
@@ -85,7 +82,6 @@ if (@ARGV) { die "conlleval: unexpected command line argument\n"; }
 while (<STDIN>) {
    chomp($line = $_);
    @features = split(/$delimiter/,$line);
-   #printf @features;
    if ($nbrOfFeatures < 0) { $nbrOfFeatures = $#features; }
    elsif ($nbrOfFeatures != $#features and @features != 0) {
       printf STDERR "unexpected number of features: %d (%d)\n",
@@ -189,15 +185,13 @@ if (not $latex) {
       if ($precision+$recall > 0);
    
    # print overall performance
-   #printf "processed $tokenCounter tokens with $foundCorrect phrases; ";
-   #printf "found: $foundGuessed phrases; correct: $correctChunk.\n";
+   printf "processed $tokenCounter tokens with $foundCorrect phrases; ";
+   printf "found: $foundGuessed phrases; correct: $correctChunk.\n";
    if ($tokenCounter>0) {
-      #printf "accuracy: %6.2f%%; ",100*$correctTags/$tokenCounter;
-      printf "%6.2f %6.2f ",100*$correctTags/$tokenCounter, $FB1;
-      
-      #printf "precision: %6.2f%%; ",$precision;
-      #printf "recall: %6.2f%%; ",$recall;
-      #printf "FB1: %6.2f\n",$FB1;
+      printf "accuracy: %6.2f%%; ",100*$correctTags/$tokenCounter;
+      printf "precision: %6.2f%%; ",$precision;
+      printf "recall: %6.2f%%; ",$recall;
+      printf "FB1: %6.2f\n",$FB1;
    }
 }
 
@@ -220,10 +214,10 @@ if (not $latex) {
       else { $recall = 100*$correctChunk{$i}/$foundCorrect{$i}; }
       if ($precision+$recall == 0.0) { $FB1 = 0.0; }
       else { $FB1 = 2*$precision*$recall/($precision+$recall); }
-      #printf "%17s: ",$i;
-      #printf "precision: %6.2f%%; ",$precision;
-      #printf "recall: %6.2f%%; ",$recall;
-      #printf "FB1: %6.2f  %d\n",$FB1,$foundGuessed{$i};
+      printf "%17s: ",$i;
+      printf "precision: %6.2f%%; ",$precision;
+      printf "recall: %6.2f%%; ",$recall;
+      printf "FB1: %6.2f  %d\n",$FB1,$foundGuessed{$i};
    }
 } else {
    print "        & Precision &  Recall  & F\$_{\\beta=1} \\\\\\hline";

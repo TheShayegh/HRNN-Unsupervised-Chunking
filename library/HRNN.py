@@ -278,8 +278,8 @@ def validate(
 def eval_conll2000(
     pairs: str
 ) -> tuple[float, float]: # F1, Acc
-    pipe = run(["perl", "eval_conll2000_updated.pl"], stdout=PIPE, input=pairs, encoding='ascii')
-    output = pipe.stdout
-    tag_acc = float(output.split()[0])
-    phrase_f1 = float(output.split()[1])
+    pipe = run(["perl", "library/eval_conll.pl"], stdout=PIPE, input=pairs, encoding='ascii')
+    output = pipe.stdout.split('\n')[1]
+    tag_acc = float(output.split()[1].split('%')[0])
+    phrase_f1 = float(output.split()[-1])
     return phrase_f1, tag_acc

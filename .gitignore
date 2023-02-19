@@ -12,3 +12,10 @@ chunk_data_fa/*.pkl
 *.out
 *val_metrics.pkl
 *train_loss.pkl
+en_de_word_embeddings
+conll2003_data
+chunk_fa
+conll*
+HRNNdata*
+CompoundPCFG-Chunker
+PersianProcess
