@@ -9,12 +9,14 @@ test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
-hidden_dim: 32
+hidden_dim: 2
 learning_rate: 0.001
 warmup: 5
 epocs: 10
 embedding_mode: "file"
-embedding_path: "./en_fa_word_embeddings/FA.txt"
+train_embedding_path: "./en_fa_word_embeddings/FA.txt"
+val_embedding_path: "./en_fa_word_embeddings/FA.txt"
+test_embedding_path: "./en_fa_word_embeddings/FA.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "HooshvareLab/bert-fa-zwnj-base"
 validation_mode: "normal" #"enforced"

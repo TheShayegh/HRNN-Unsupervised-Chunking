@@ -1,8 +1,8 @@
-home: "experiments/fa_bienfa_O/"
+home: "experiments/en_fa_bienfa_O/"
 
-train_data: "HRNNdata_fa_O/train.pkl"
-validation_data: "HRNNdata_fa_O/test.pkl"
-validation_true_tags: "HRNNdata_fa_O/test_tag.pkl"
+train_data: "HRNNdata_en_original/train.pkl"
+validation_data: "HRNNdata_en_original/test.pkl"
+validation_true_tags: "HRNNdata_en_original/test_tag.pkl"
 
 test_data: "HRNNdata_fa_O/test.pkl"
 test_true_tags: "HRNNdata_fa_O/test_tag.pkl"
@@ -14,15 +14,15 @@ learning_rate: 0.001
 warmup: 5
 epocs: 10
 embedding_mode: "file"
-train_embedding_path: "./en_fa_word_embeddings/FA.txt"
-val_embedding_path: "./en_fa_word_embeddings/FA.txt"
+train_embedding_path: "./en_fa_word_embeddings/EN.txt"
+val_embedding_path: "./en_fa_word_embeddings/EN.txt"
 test_embedding_path: "./en_fa_word_embeddings/FA.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-large-cased"
-validation_mode: "enforced"
+validation_mode: "normal"
 test_mode: "enforced"
 enforced_mode: "Bstarting"
-enforced_validation_tags: './HRNNdata_fa_O/test_htag.pkl'
+enforced_validation_tags: './HRNNdata_fa_O/val_htag.pkl'
 enforced_test_tags: './HRNNdata_fa_O/test_htag.pkl'
 
 load_last_embeddings: true

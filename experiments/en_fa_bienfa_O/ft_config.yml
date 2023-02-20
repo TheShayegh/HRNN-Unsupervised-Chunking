@@ -1,4 +1,4 @@
-home: "experiments/fa_bienfa_O/"
+home: "experiments/en_fa_bienfa_O/"
 
 train_data: "HRNNdata_fa_O/train.pkl"
 validation_data: "HRNNdata_fa_O/test.pkl"
@@ -18,7 +18,6 @@ train_embedding_path: "./en_fa_word_embeddings/FA.txt"
 val_embedding_path: "./en_fa_word_embeddings/FA.txt"
 test_embedding_path: "./en_fa_word_embeddings/FA.txt"
 embedding_token_heuristic: "mean"
-bert_pretrained_weights: "bert-large-cased"
 validation_mode: "enforced"
 test_mode: "enforced"
 enforced_mode: "Bstarting"
@@ -27,15 +26,15 @@ enforced_test_tags: './HRNNdata_fa_O/test_htag.pkl'
 
 load_last_embeddings: true
 load_last_test_embeddings: true
-train_embeddings: "train_word_embeddings.pt"
-validation_embeddings: "validation_word_embeddings.pt"
+train_embeddings: "ft_train_word_embeddings.pt"
+validation_embeddings: "ft_validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"
-test_output_path: "test.out"
-train_loss: "train_loss.pkl"
-validation_metrics: "val_metrics.pkl"
-best_model_path: "best_model.pt"
+test_output_path: "ft_test.out"
+train_loss: "ft_train_loss.pkl"
+validation_metrics: "ft_val_metrics.pkl"
+best_model_path: "ft_best_model.pt"
 model_checkpoints_path: ""
 validation_checkpoints_path: ""
 optimizer_path: ""
 
-pretrained_model: ""
+pretrained_model: "best_model.pt"
