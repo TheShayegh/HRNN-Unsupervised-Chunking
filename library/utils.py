@@ -99,7 +99,27 @@ def select_indices(tokens, raw_tokens, model, mode):
     return mask
 
 
+def persian_preprocess(tokens, raw_tokens):
+    new_tokens = ['FAKE_START']
+    while len(tokens):
+        token = tokens.pop(0)
+        if token == '[ZWNJ]':
+            if new_tokens[-1] == '[UNK]' or tokens[0] == '[UNK]':
+                token = ''
+                tokens[0] = ''
+                new_tokens[-1] = '[UNK]'
+            else:
+                token = '\u200c'
+        new_tokens.append(token)
+    new_raw_tokens = [t.replace('\u200f', '') for t in raw_tokens]
+    return new_tokens[1:], new_raw_tokens
+
+
 def group_indices(tokens, raw_tokens, model):
+    # print(tokens)
+    # print(raw_tokens)
+    # tokens, raw_tokens = persian_preprocess(tokens, raw_tokens)
+
     mask = []
     raw_i = 0
     model = model.split('/')[-1].split('-')[0]
@@ -109,7 +129,6 @@ def group_indices(tokens, raw_tokens, model):
     options = [raw_tokens[raw_i]]
     skip = 0
     collapsed_cnt = 0
-    # print(' '.join(raw_tokens))
     for i in range(len(tokens)):
         token = tokens[i]
 
@@ -119,6 +138,7 @@ def group_indices(tokens, raw_tokens, model):
         collapsed_cnt += 1
         if token != '[UNK]':
             collapsed += token
+            # print(options, collapsed)
             if collapsed in options:
                 raw_tokens_cnt = options.index(collapsed)
                 for j in range(raw_tokens_cnt+1):
@@ -136,12 +156,12 @@ def group_indices(tokens, raw_tokens, model):
                 skip = 0
         else:
             if collapsed:
-                print(options)
+                print(options, collapsed)
                 raise Exception("Invalid token-tags!")
             skip += 1
             options.append(raw_tokens[raw_i+skip])
 
     if raw_i != len(raw_tokens):
-        print(options)
+        print(options, collapsed)
         return 
     return torch.tensor(mask)

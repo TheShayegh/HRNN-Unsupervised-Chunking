@@ -9,7 +9,7 @@ test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
-hidden_dim: 100
+hidden_dim: 64
 learning_rate: 0.001
 warmup: 5
 epocs: 10
@@ -22,7 +22,7 @@ bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal" #"enforcedEN"
 enforced_mode: "Bstarting"
 
-load_last_embeddings: true
+load_last_embeddings: False
 load_last_test_embeddings: true
 train_embeddings: "ft_train_word_embeddings.pt"
 validation_embeddings: "ft_validation_word_embeddings.pt"

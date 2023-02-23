@@ -9,7 +9,7 @@ test_true_tags: "HRNNdata_fa_O/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
-hidden_dim: 100
+hidden_dim: 20
 learning_rate: 0.001
 warmup: 5
 epocs: 10

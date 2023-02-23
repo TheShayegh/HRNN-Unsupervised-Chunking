@@ -1,6 +1,6 @@
-home: "experiments/en_using_multilingual_bert/"
+home: "experiments/enfa_shuffled/"
 
-train_data: "HRNNdata_en_original/train.pkl"
+train_data: "HRNNdata_enfa/train.pkl"
 validation_data: "HRNNdata_en_original/val.pkl"
 validation_true_tags: "HRNNdata_en_original/val_tag.pkl"
 
@@ -20,11 +20,13 @@ test_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal" #"enforced"
-test_mode: "normal" #"enforced"
+test_mode: "normal"
 enforced_mode: "Bstarting"
+enforced_validation_tags: './HRNNdata_fa_O/test_htag.pkl'
+enforced_test_tags: './HRNNdata_fa_O/test_htag.pkl'
 
 load_last_embeddings: false
-load_last_test_embeddings: true
+load_last_test_embeddings: false
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"

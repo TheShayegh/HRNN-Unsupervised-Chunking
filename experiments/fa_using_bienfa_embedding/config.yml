@@ -9,7 +9,7 @@ test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
-hidden_dim: 2
+hidden_dim: 100
 learning_rate: 0.001
 warmup: 5
 epocs: 10
@@ -20,10 +20,13 @@ test_embedding_path: "./en_fa_word_embeddings/FA.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "HooshvareLab/bert-fa-zwnj-base"
 validation_mode: "normal" #"enforced"
+test_mode: "normal"
 enforced_mode: "Bstarting"
+enforced_validation_tags: './HRNNdata_fa_O/test_htag.pkl'
+enforced_test_tags: './HRNNdata_fa_O/test_htag.pkl'
 
-load_last_embeddings: true
-load_last_test_embeddings: true
+load_last_embeddings: false
+load_last_test_embeddings: false
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"

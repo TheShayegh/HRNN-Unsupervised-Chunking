@@ -4,6 +4,7 @@ train_data: "HRNNdata_en_original/train.pkl"
 validation_data: "HRNNdata_en_original/val.pkl"
 validation_true_tags: "HRNNdata_en_original/val_tag.pkl"
 
+# test_data: "HRNNdata_due/val.pkl"
 test_data: "HRNNdata_due/test.pkl"
 test_true_tags: "HRNNdata_due/test_tag.pkl"
 
@@ -11,13 +12,16 @@ device: 'cuda:0'
 embedding_dim: 768
 hidden_dim: 100
 learning_rate: 0.001
-warmup: 50
+warmup: 5
 epocs: 10
 embedding_mode: "Bert"
-embedding_path: ""
+train_embedding_path: ""
+val_embedding_path: ""
+test_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal" #"enforced"
+test_mode: "normal" #"enforced"
 enforced_mode: "Bstarting"
 
 load_last_embeddings: true

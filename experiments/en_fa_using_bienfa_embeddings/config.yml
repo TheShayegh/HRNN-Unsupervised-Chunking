@@ -20,6 +20,7 @@ test_embedding_path: "./en_fa_word_embeddings/FA.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-large-cased"
 validation_mode: "normal" #"enforced"
+test_mode: "normal" #"enforced"
 enforced_mode: "Bstarting"
 
 load_last_embeddings: true

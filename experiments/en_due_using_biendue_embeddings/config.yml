@@ -1,4 +1,4 @@
-home: "experiments/en_due_multilingual_bert/"
+home: "experiments/en_due_using_biendue_embeddings/"
 
 train_data: "HRNNdata_en_original/train.pkl"
 validation_data: "HRNNdata_en_original/val.pkl"

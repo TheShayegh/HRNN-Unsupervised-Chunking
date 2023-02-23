@@ -104,6 +104,7 @@ def main():
         tagset_size=2,
         device=device,
     ).to(device)
+    print(hrnn_model)
     optimizer, scheduler = get_training_equipments(hrnn_model, lr=config['learning_rate'], num_iter=config['epocs'], warmup=config['warmup'])
 
     train_loss_vec = []

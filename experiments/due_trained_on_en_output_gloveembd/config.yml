@@ -1,24 +1,25 @@
-home: "experiments/fa_using_HooshvareLab_bert/"
+home: "experiments/due_trained_on_en_output_gloveembd/"
 
-train_data: "HRNNdata_fa/train.pkl"
-validation_data: "HRNNdata_fa/test.pkl"
-validation_true_tags: "HRNNdata_fa/test_tag.pkl"
+train_data: "HRNNdata_due/train.pkl.predicted.pkl"
+validation_data: "HRNNdata_due/val.pkl.predicted.pkl"
+validation_true_tags: "HRNNdata_due/val_tag.pkl"
 
-test_data: "HRNNdata_fa/test.pkl"
-test_true_tags: "HRNNdata_fa/test_tag.pkl"
+test_data: "HRNNdata_due/test.pkl.predicted.pkl"
+test_true_tags: "HRNNdata_due/test_tag.pkl"
 
 device: 'cuda:0'
-embedding_dim: 768
+embedding_dim: 300
 hidden_dim: 100
 learning_rate: 0.001
 warmup: 5
 epocs: 10
-embedding_mode: "Bert"
-train_embedding_path: ""
-val_embedding_path: ""
-test_embedding_path: ""
+embedding_mode: "file"
+train_embedding_path: "fixed_word_embeddings/GloVe_due.txt"
+val_embedding_path: "fixed_word_embeddings/GloVe_due.txt"
+test_embedding_path: "fixed_word_embeddings/GloVe_due.txt"
 embedding_token_heuristic: "mean"
-bert_pretrained_weights: "HooshvareLab/bert-fa-zwnj-base"
+bert_pretrained_weights: "bert-base-german-cased"
+# bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal" #"enforced"
 test_mode: "normal" #"enforced"
 enforced_mode: "Bstarting"
