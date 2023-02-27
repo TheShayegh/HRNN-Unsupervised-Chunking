@@ -1,14 +1,14 @@
 home: "experiments/original_paper_en/"
 
-train_data: "HRNNdata_en_regenerated/train.pkl"
-validation_data: "HRNNdata_en_regenerated/val.pkl"
-validation_true_tags: "HRNNdata_en_regenerated/val_tag.pkl"
+train_data: "HRNNdata_en/train.pkl"
+validation_data: "HRNNdata_en/val.pkl"
+validation_true_tags: "HRNNdata_en/val_tag.pkl"
 
-test_data: "HRNNdata_en_regenerated/test.pkl"
-test_true_tags: "HRNNdata_en_regenerated/test_tag.pkl"
+test_data: "HRNNdata_en/test.pkl"
+test_true_tags: "HRNNdata_en/test_tag.pkl"
 
 device: 'cuda:0'
-embedding_dim: 768
+embedding_dim: 1024
 hidden_dim: 100
 learning_rate: 0.001
 warmup: 50
@@ -16,7 +16,7 @@ epocs: 10
 embedding_mode: "Bert"
 embedding_path: ""
 embedding_token_heuristic: "mean"
-bert_pretrained_weights: "bert-base-cased"
+bert_pretrained_weights: "bert-large-cased"
 validation_mode: "normal" #"enforced"
 enforced_mode: "Bstarting"
 
