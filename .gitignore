@@ -21,3 +21,4 @@ CompoundPCFG-Chunker
 PersianProcess
 Bijankhan
 fixed_word_embeddings
+*.pkl

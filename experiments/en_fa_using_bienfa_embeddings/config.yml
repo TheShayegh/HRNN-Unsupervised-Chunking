@@ -4,8 +4,10 @@ train_data: "HRNNdata_en_original/train.pkl"
 validation_data: "HRNNdata_en_original/val.pkl"
 validation_true_tags: "HRNNdata_en_original/val_tag.pkl"
 
-test_data: "HRNNdata_fa/test.pkl"
-test_true_tags: "HRNNdata_fa/test_tag.pkl"
+# test_data: "HRNNdata_fa/test.pkl"
+# test_true_tags: "HRNNdata_fa/test_tag.pkl"
+test_data: "HRNNdata_en_original/test.pkl"
+test_true_tags: "HRNNdata_en_original/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
@@ -14,9 +16,10 @@ learning_rate: 0.001
 warmup: 5
 epocs: 10
 embedding_mode: "file"
-train_embedding_path: "./en_fa_word_embeddings/EN.txt"
-val_embedding_path: "./en_fa_word_embeddings/EN.txt"
-test_embedding_path: "./en_fa_word_embeddings/FA.txt"
+train_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
+val_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
+# test_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/FA.txt"
+test_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-large-cased"
 validation_mode: "normal" #"enforced"

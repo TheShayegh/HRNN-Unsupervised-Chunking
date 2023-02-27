@@ -97,11 +97,11 @@ def get_training_equipments(
     num_iter: int,
     warmup: int,
 ) -> tuple[torch.optim.Optimizer, transformers.SchedulerType]:
-    optimizer = optim.Adam(model.parameters(), lr=lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
+    optimizer = optim.Adam(model.parameters(), lr=lr*(num_iter+1)/num_iter, betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
     scheduler = transformers.get_cosine_schedule_with_warmup(
         optimizer, 
         num_warmup_steps=warmup,
-        num_training_steps=num_iter,
+        num_training_steps=num_iter+1,
         num_cycles=0.5,
         last_epoch=-1
     )
@@ -258,7 +258,6 @@ def validate(
     output = ""
     with torch.no_grad():
         for i, (batch, true_tag) in tqdm(enumerate(zip(bucket_iterator.batches, true_tags)), total=len(bucket_iterator)):
-            output += "x y B B\n"
             tag_scores, loss = _forward(model, batch, hc, device)
             loss_sum += loss.item()
             ind = torch.argmax(tag_scores, dim=1)
@@ -276,9 +275,10 @@ def validate(
 
 
 def eval_conll2000(
-    pairs: str
+    pairs: str,
+    eval_conll_path: str = 'library/eval_conll.pl',
 ) -> tuple[float, float]: # F1, Acc
-    pipe = run(["perl", "library/eval_conll.pl"], stdout=PIPE, input=pairs, encoding='ascii')
+    pipe = run(["perl", eval_conll_path], stdout=PIPE, input=pairs, encoding='ascii')
     output = pipe.stdout.split('\n')[1]
     tag_acc = float(output.split()[1].split('%')[0])
     phrase_f1 = float(output.split()[-1])

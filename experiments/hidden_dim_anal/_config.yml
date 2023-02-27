@@ -1,0 +1,47 @@
+bert_pretrained_weights: bert-base-multilingual-cased
+best_model_path: best_model_1_0.pt
+device: cuda:0
+embedding_dim: 768
+embedding_mode: Bert
+embedding_token_heuristic: mean
+enforced_mode: Bstarting
+epocs: 1
+hidden_dim: 1
+home: experiments/hidden_dim_anal/
+languages:
+- TrainEN
+- EN
+- DUE
+- FA
+learning_rate: 2.0e-05
+load_last_embeddings: true
+load_last_test_embeddings: true
+model_checkpoints_path: ''
+optimizer_path: ''
+pretrained_model: ''
+test_data:
+- HRNNdata_en_original/train.pkl
+- HRNNdata_en_original/test.pkl
+- HRNNdata_due/test.pkl
+- HRNNdata_fa/test.pkl
+test_embedding_path: ''
+test_embeddings: test_word_embeddings_for_{}.pt
+test_mode: normal
+test_output_path: test_{}_for_{}_{}.out
+test_true_tags:
+- HRNNdata_en_original/train_tag.pkl
+- HRNNdata_en_original/test_tag.pkl
+- HRNNdata_due/test_tag.pkl
+- HRNNdata_fa/test_tag.pkl
+train_data: HRNNdata_en_original/train.pkl
+train_embedding_path: ''
+train_embeddings: train_word_embeddings.pt
+train_loss: ''
+val_embedding_path: ''
+validation_checkpoints_path: ''
+validation_data: HRNNdata_en_original/val.pkl
+validation_embeddings: validation_word_embeddings.pt
+validation_metrics: ''
+validation_mode: normal
+validation_true_tags: HRNNdata_en_original/val_tag.pkl
+warmup: 0

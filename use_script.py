@@ -76,7 +76,11 @@ def main():
             i += 1
     output = [BIto21(o) for o in output]
     output = list(zip(original_tokens, output))
-    pickle.dump(output, open(config['test_data']+'.predicted.pkl', 'wb'))
+    if 'target_path' in config:
+        pickle.dump(output, open(config['target_path'], 'wb'))
+    else:
+        postfix = sys.argv[2]
+        pickle.dump(output, open(config['test_data']+f'.{postfix}.pkl', 'wb'))
 
 if __name__ == "__main__":
 	main()

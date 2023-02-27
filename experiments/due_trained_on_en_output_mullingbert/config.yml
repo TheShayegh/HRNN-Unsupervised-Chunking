@@ -1,10 +1,10 @@
 home: "experiments/due_trained_on_en_output_mullingbert/"
 
-train_data: "HRNNdata_due/train.pkl.predicted.pkl"
-validation_data: "HRNNdata_due/val.pkl.predicted.pkl"
+train_data: "HRNNdata_due/train.pkl"
+validation_data: "HRNNdata_due/val.pkl"
 validation_true_tags: "HRNNdata_due/val_tag.pkl"
 
-test_data: "HRNNdata_due/test.pkl.predicted.pkl"
+ytest_data: "HRNNdata_due/test.pkl"
 test_true_tags: "HRNNdata_due/test_tag.pkl"
 
 device: 'cuda:0'
