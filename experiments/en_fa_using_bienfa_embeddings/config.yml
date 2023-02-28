@@ -1,24 +1,21 @@
 home: "experiments/en_fa_using_bienfa_embeddings/"
 
-train_data: "HRNNdata_en_original/train.pkl"
-validation_data: "HRNNdata_en_original/val.pkl"
-validation_true_tags: "HRNNdata_en_original/val_tag.pkl"
+train_data: "HRNNdata_en/train.pkl"
+validation_data: "HRNNdata_en/val.pkl"
+validation_true_tags: "HRNNdata_en/val_tag.pkl"
 
-# test_data: "HRNNdata_fa/test.pkl"
-# test_true_tags: "HRNNdata_fa/test_tag.pkl"
-test_data: "HRNNdata_en_original/test.pkl"
-test_true_tags: "HRNNdata_en_original/test_tag.pkl"
+test_data: "HRNNdata_fa/test.pkl"
+test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 device: 'cuda:0'
 embedding_dim: 300
-hidden_dim: 64
-learning_rate: 0.001
-warmup: 5
-epocs: 10
+hidden_dim: 100
+learning_rate: 0.00006
+warmup: 0
+epocs: 4
 embedding_mode: "file"
 train_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
 val_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
-# test_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/FA.txt"
 test_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/EN.txt"
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-large-cased"

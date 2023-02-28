@@ -1,6 +1,6 @@
 home: "experiments/second_order_stability_anal_FA/"
-source_model_path: "../first_order_stablity_anal_200/best_model_{}.pt"
-source_config: "../first_order_stablity_anal_200/config.yml"
+source_model_path: "../first_order_stablity_anal_100/best_model_{}.pt"
+source_config: "../first_order_stablity_anal_100/config.yml"
 
 train_data: "HRNNdata_fa/train.pkl"
 validation_data: "HRNNdata_fa/test.pkl"
@@ -9,11 +9,11 @@ validation_true_tags: "HRNNdata_fa/test_tag.pkl"
 test_data: "HRNNdata_fa/test.pkl"
 test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
-target_path: "{}{}_predicted{}.pkl"
+target_path: "{}{}_predicted_{}.pkl"
 
 device: 'cuda:0'
 embedding_dim: 768
-hidden_dim: 200
+hidden_dim: 100
 learning_rate: 0.00002
 warmup: 0
 epocs: 1
@@ -21,17 +21,21 @@ embedding_mode: "Bert"
 train_embedding_path: ""
 val_embedding_path: ""
 test_embedding_path: ""
+use_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "HooshvareLab/bert-fa-zwnj-base"
 validation_mode: "normal"
 test_mode: "normal"
+use_mode: "normal"
 enforced_mode: "Bstarting"
 
 load_last_embeddings: true
 load_last_test_embeddings: true
+load_last_use_embeddings: true
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"
+use_embeddings: ""
 test_output_path: "test_{}_{}.out"
 train_loss: ""
 validation_metrics: ""

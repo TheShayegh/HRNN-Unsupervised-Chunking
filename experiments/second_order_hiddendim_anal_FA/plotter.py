@@ -7,51 +7,54 @@ import pandas as pd
 import matplotlib.pyplot as plt
 sys.path.insert(1, '../../')
 from library.HRNN import eval_conll2000
+from eval_heuristic import eval_hu
+
+M = 3
+N = 3
 
 def main():
     with open(sys.argv[1]) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     home = config['home']
 
-    train_loss = []
-    validation_metrics = []
-    test_metrics = {'fscore': {l: [] for l in config["languages"]}, 'acc': {l: [] for l in config["languages"]}}
+    default_dict = lambda N, M: {i: {j: [] for j in range(M)} for i in range(N)}
+    test_metrics = {'fscore': default_dict(N, M), 'acc': default_dict(N, M)}
+    init_metrics = {'fscore': {}, 'acc': {}}
 
-    for i in range(10):
-        train_loss_path = config['train_loss'].format(i)
-        validation_metrics_path = config['validation_metrics'].format(i)
+    for i in range(N):
+        for j in range(M):
+            
+            for hidden_dim in config['hidden_dim']:
+                fscore, acc = eval_conll2000(
+                    open(config['test_output_path'].format(hidden_dim, i, j), 'r').read(),
+                    eval_conll_path="../../library/eval_conll.pl"
+                )
+                test_metrics['fscore'][j][i].append(fscore)
+                test_metrics['acc'][j][i].append(acc)
 
-        train_loss.append(pickle.load(open(train_loss_path, 'rb')))
-        validation_metrics.append(pickle.load(open(validation_metrics_path, 'rb')))
 
-        for lang in config["languages"]:
-            fscore, acc = eval_conll2000(
-                open(config['test_output_path'].format(i, lang), 'r').read(),
-                eval_conll_path="../../library/eval_conll.pl"
-            )
-            test_metrics['fscore'][lang].append(fscore)
-            test_metrics['acc'][lang].append(acc)
+    for i in range(N):
+        
+        test_data = pickle.load(open('../../'+config['target_path'].format(config['home'], 'test', i), 'rb'))
+        test_tags_gt = pickle.load(open('../../'+config['test_true_tags'], 'rb'))
+        fscore, acc = eval_hu(test_data, test_tags_gt, eval_conll_path="../../library/eval_conll.pl")
+        init_metrics['fscore'][i] = fscore
+        init_metrics['acc'][i] = acc
 
-    for tl in train_loss:
-        x = sns.lineplot(tl, color='b', alpha=.3)
-    x.get_figure().savefig("train_loss.png")
-    plt.clf()
-    for vm in validation_metrics:
-        x = sns.lineplot(vm['loss'], color='b', alpha=.3)
-    x.get_figure().savefig("validation_loss.png")
-    plt.clf()
-    for vm in validation_metrics:
-        x = sns.lineplot(vm['fscore'], color='b', alpha=.3)
-    x.get_figure().savefig("validation_fscore.png")
-    plt.clf()
-    for vm in validation_metrics:
-        x = sns.lineplot(vm['acc'], color='b', alpha=.3)
-    x.get_figure().savefig("validation_acc.png")
-    plt.clf()
-    sns.boxplot(pd.DataFrame(test_metrics['fscore'])).get_figure().savefig("test_fscore.png")
-    plt.clf()
-    sns.boxplot(pd.DataFrame(test_metrics['acc'])).get_figure().savefig("test_acc.png")
-    plt.clf()
+    df = lambda metric, j: pd.DataFrame(test_metrics[metric][j], index=config['hidden_dim'])
+
+    def plot(metric):
+        for j in range(M):
+            x = sns.lineplot(df(metric, j), alpha=.2, legend=False)
+        x = sns.lineplot(sum([df(metric, j) for j in range(M)])/M)
+        for i in range(N):
+            x.axhline(init_metrics[metric][i], linestyle=['-','--',':'][i], color=['b','orange','g'][i])
+        x.set_ylim(min(init_metrics[metric].values())-1, None)
+        x.get_figure().savefig(f"test_{metric}.png")
+        plt.clf()
+
+    plot('fscore')
+    plot('acc')
 
 if __name__ == "__main__":
 	main()

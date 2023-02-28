@@ -1,13 +1,13 @@
-home: "experiments/second_order_hiddendim_anal_FA/"
+home: "experiments/second_order_hiddendim_anal_DUE/"
 source_model_path: "../first_order_stablity_anal_100/best_model_{}.pt"
 source_config: "../first_order_stablity_anal_100/config.yml"
 
-train_data: "HRNNdata_fa/train.pkl"
-validation_data: "HRNNdata_fa/test.pkl"
-validation_true_tags: "HRNNdata_fa/test_tag.pkl"
+train_data: "HRNNdata_due/train.pkl"
+validation_data: "HRNNdata_due/val.pkl"
+validation_true_tags: "HRNNdata_due/val_tag.pkl"
 
-test_data: "HRNNdata_fa/test.pkl"
-test_true_tags: "HRNNdata_fa/test_tag.pkl"
+test_data: "HRNNdata_due/test.pkl"
+test_true_tags: "HRNNdata_due/test_tag.pkl"
 
 target_path: "{}{}_predicted_{}.pkl"
 
@@ -23,7 +23,7 @@ val_embedding_path: ""
 test_embedding_path: ""
 use_embedding_path: ""
 embedding_token_heuristic: "mean"
-bert_pretrained_weights: "HooshvareLab/bert-fa-zwnj-base"
+bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal"
 test_mode: "normal"
 use_mode: "normal"

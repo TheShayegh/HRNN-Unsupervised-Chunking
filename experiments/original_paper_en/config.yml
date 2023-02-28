@@ -14,14 +14,17 @@ learning_rate: 0.001
 warmup: 50
 epocs: 10
 embedding_mode: "Bert"
-embedding_path: ""
+train_embedding_path: ""
+test_embedding_path: ""
+val_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-large-cased"
 validation_mode: "normal" #"enforced"
+test_mode: "normal"
 enforced_mode: "Bstarting"
 
-load_last_embeddings: false
-load_last_test_embeddings: false
+load_last_embeddings: true
+load_last_test_embeddings: true
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"

@@ -1,16 +1,19 @@
-home: "experiments/hidden_dim_anal/"
+home: "experiments/second_order_stability_anal_DUE/"
+source_model_path: "../first_order_stablity_anal_100/best_model_{}.pt"
+source_config: "../first_order_stablity_anal_100/config.yml"
 
-train_data: "HRNNdata_en/train.pkl"
-validation_data: "HRNNdata_en/val.pkl"
-validation_true_tags: "HRNNdata_en/val_tag.pkl"
+train_data: "HRNNdata_due/train.pkl"
+validation_data: "HRNNdata_due/val.pkl"
+validation_true_tags: "HRNNdata_due/val_tag.pkl"
 
-languages: ["EN", "DUE", "TrainEN", "FA"]
-test_data: ["HRNNdata_en/test.pkl", "HRNNdata_due/test.pkl", "HRNNdata_en/train.pkl", "HRNNdata_fa/test.pkl"]
-test_true_tags: ["HRNNdata_en/test_tag.pkl", "HRNNdata_due/test_tag.pkl", "HRNNdata_en/train_tag.pkl", "HRNNdata_fa/test_tag.pkl"]
+test_data: "HRNNdata_due/test.pkl"
+test_true_tags: "HRNNdata_due/test_tag.pkl"
+
+target_path: "{}{}_predicted_{}.pkl"
 
 device: 'cuda:0'
 embedding_dim: 768
-hidden_dim: [1,2,10,20,50,100,200,500]
+hidden_dim: 100
 learning_rate: 0.00002
 warmup: 0
 epocs: 1
@@ -18,18 +21,22 @@ embedding_mode: "Bert"
 train_embedding_path: ""
 val_embedding_path: ""
 test_embedding_path: ""
+use_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal"
 test_mode: "normal"
+use_mode: "normal"
 enforced_mode: "Bstarting"
 
 load_last_embeddings: true
 load_last_test_embeddings: true
+load_last_use_embeddings: true
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
-test_embeddings: "test_word_embeddings_for_{}.pt"
-test_output_path: "test_{}_for_{}_{}.out"
+test_embeddings: "test_word_embeddings.pt"
+use_embeddings: ""
+test_output_path: "test_{}_{}.out"
 train_loss: ""
 validation_metrics: ""
 best_model_path: "best_model_{}_{}.pt"

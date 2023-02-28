@@ -28,17 +28,17 @@ def main():
         device = torch.device(config['device'])
     print("device is:", device)
 
-    data = pickle.load(open(config['test_data'], "rb"))
-    original_tokens = [d[0] for d in data]
+    data = pickle.load(open(config['use_data'], "rb"))
+    original_tokens = [d[0].copy() for d in data]
     word_to_ix, ix_to_word, tag_to_ix, ix_to_tag = build_vocab(data)
     tokens, tags, msl = data_padding(data, word_to_ix, tag_to_ix, device=device)
-    if config['load_last_test_embeddings'] and os.path.exists(config['home']+config['test_embeddings']):
-        embeddings = torch.load(config['home']+config['test_embeddings'], map_location=device)
+    if config['load_last_use_embeddings'] and os.path.exists(config['home']+config['use_embeddings']):
+        embeddings = torch.load(config['home']+config['use_embeddings'], map_location=device)
     else:
-        config['embedding_path'] = config['test_embedding_path']
+        config['embedding_path'] = config['use_embedding_path']
         embeddings = get_embeddings(tokens.to(device), ix_to_word, config, device)
-        if config['test_embeddings']:
-            torch.save(embeddings, config['home']+config['test_embeddings'])
+        if config['use_embeddings']:
+            torch.save(embeddings, config['home']+config['use_embeddings'])
 
     data = list(zip(embeddings, tags))
 
@@ -50,8 +50,8 @@ def main():
     ).to(device)
     hrnn_model.load_state_dict(torch.load(config['home']+config['best_model_path'], map_location=torch.device(device)))
 
-    if config['test_mode'].lower() == 'enforced':
-        enforced_tags = pickle.load(open(config['enforced_test_tags'], "rb"))
+    if config['use_mode'].lower() == 'enforced':
+        enforced_tags = pickle.load(open(config['enforced_use_tags'], "rb"))
     else:
         enforced_tags = None
 
@@ -68,19 +68,14 @@ def main():
     output = []
     for _, tags in data:
         output.append([])
-        for j,t in enumerate(tags):
-            if j:
-                if not t:
-                    break
-                output[-1].append(flat_output[i])
+        for j,t in enumerate(tags[1:]):
+            if not t:
+                break
+            output[-1].append(flat_output[i])
             i += 1
     output = [BIto21(o) for o in output]
     output = list(zip(original_tokens, output))
-    if 'target_path' in config:
-        pickle.dump(output, open(config['target_path'], 'wb'))
-    else:
-        postfix = sys.argv[2]
-        pickle.dump(output, open(config['test_data']+f'.{postfix}.pkl', 'wb'))
+    pickle.dump(output, open(config['target_path'], 'wb'))
 
 if __name__ == "__main__":
 	main()

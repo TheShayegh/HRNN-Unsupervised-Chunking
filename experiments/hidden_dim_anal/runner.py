@@ -14,9 +14,7 @@ def main():
             print(f"*** Hidden dim = {hidden_dim}")
             config_dimed = deepcopy(config)
             config_dimed['hidden_dim'] = hidden_dim
-            # config_dimed['train_loss'] = config['train_loss'].format(hidden_dim)
             config_dimed['best_model_path'] = config['best_model_path'].format(hidden_dim, i)
-            # config_dimed['validation_metrics'] = config['validation_metrics'].format(hidden_dim)
 
             with open("_config.yml", 'w') as f:
                 f.write(yaml.dump(config_dimed))

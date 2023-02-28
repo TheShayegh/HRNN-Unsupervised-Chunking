@@ -13,9 +13,7 @@ def main():
         print(f"*** Run {i}th")
         config_dimed = deepcopy(config)
         del config_dimed['languages']
-        # config_dimed['train_loss'] = config['train_loss'].format(i)
         config_dimed['best_model_path'] = config['best_model_path'].format(i)
-        # config_dimed['validation_metrics'] = config['validation_metrics'].format(i)
 
         with open("_config.yml", 'w') as f:
             f.write(yaml.dump(config_dimed))

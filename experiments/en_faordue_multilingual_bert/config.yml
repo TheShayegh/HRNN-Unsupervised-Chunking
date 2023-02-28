@@ -1,36 +1,44 @@
-home: "experiments/en_fa_multilingual_bert/"
+home: "experiments/en_faordue_multilingual_bert/"
 
-train_data: "HRNNdata_en_original/train.pkl"
-validation_data: "HRNNdata_en_original/val.pkl"
-validation_true_tags: "HRNNdata_en_original/val_tag.pkl"
+train_data: "HRNNdata_en/train.pkl"
+validation_data: "HRNNdata_en/val.pkl"
+validation_true_tags: "HRNNdata_en/val_tag.pkl"
 
-# test_data: "HRNNdata_fa/train.pkl"
-test_data: "HRNNdata_fa/test.pkl"
-test_true_tags: "HRNNdata_fa/test_tag.pkl"
-# test_data: "HRNNdata_en_original/test.pkl"
-# test_true_tags: "HRNNdata_en_original/test_tag.pkl"
+# test_data: "HRNNdata_fa/test.pkl"
+test_data: "HRNNdata_due/test.pkl"
+# test_true_tags: "HRNNdata_fa/test_tag.pkl"
+test_true_tags: "HRNNdata_due/test_tag.pkl"
+
+# use_data: "HRNNdata_fa/test.pkl"
+use_data: "HRNNdata_due/val.pkl"
+# target_path: "experiments/fa_trained_on_en_output_mullingbert/test.pkl"
+target_path: "experiments/due_trained_on_en_output_mullingbert/val.pkl"
 
 device: 'cuda:0'
 embedding_dim: 768
 hidden_dim: 100
-learning_rate: 0.001
-warmup: 5
-epocs: 3
+learning_rate: 0.00002
+warmup: 0
+epocs: 1
 embedding_mode: "Bert"
 train_embedding_path: ""
 val_embedding_path: ""
 test_embedding_path: ""
+use_embedding_path: ""
 embedding_token_heuristic: "mean"
 bert_pretrained_weights: "bert-base-multilingual-cased"
 validation_mode: "normal" #"enforced"
 test_mode: "normal" #"enforced"
+use_mode: "normal" #"enforced"
 enforced_mode: "Bstarting"
 
 load_last_embeddings: true
 load_last_test_embeddings: false
+load_last_use_embeddings: false
 train_embeddings: "train_word_embeddings.pt"
 validation_embeddings: "validation_word_embeddings.pt"
 test_embeddings: "test_word_embeddings.pt"
+use_embeddings: "use_word_embeddings.pt"
 test_output_path: "test.out"
 train_loss: "train_loss.pkl"
 validation_metrics: "val_metrics.pkl"

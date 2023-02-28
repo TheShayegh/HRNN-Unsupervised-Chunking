@@ -1,0 +1,40 @@
+home: "experiments/due_trained_on_en_output_mullingbert/"
+
+train_data: "experiments/due_trained_on_en_output_mullingbert/train.pkl"
+validation_data: "experiments/due_trained_on_en_output_mullingbert/test.pkl"
+validation_true_tags: "HRNNdata_due/test_tag.pkl"
+
+test_data: "HRNNdata_due/test.pkl"
+test_true_tags: "HRNNdata_due/test_tag.pkl"
+
+device: 'cuda:0'
+embedding_dim: 768
+hidden_dim: 100
+learning_rate: 0.00002
+warmup: 0
+epocs: 1
+embedding_mode: "Bert"
+# embedding_mode: "file"
+train_embedding_path: ""
+val_embedding_path: ""
+test_embedding_path: ""
+embedding_token_heuristic: "mean"
+bert_pretrained_weights: "bert-base-multilingual-cased"
+validation_mode: "normal" #"enforced"
+test_mode: "normal" #"enforced"
+enforced_mode: "Bstarting"
+
+load_last_embeddings: false
+load_last_test_embeddings: false
+train_embeddings: "train_word_embeddings.pt"
+validation_embeddings: "validation_word_embeddings.pt"
+test_embeddings: "test_word_embeddings.pt"
+test_output_path: "test.out"
+train_loss: "train_loss.pkl"
+validation_metrics: "val_metrics.pkl"
+best_model_path: "best_model.pt"
+model_checkpoints_path: ""
+validation_checkpoints_path: ""
+optimizer_path: ""
+
+pretrained_model: ""

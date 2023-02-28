@@ -49,8 +49,8 @@ def compute_emb_from_file(
     src_embeddings, src_id2word, src_word2id = load_vec(config['embedding_path'])
     feat_sents = []
     for idx, s_tokens in enumerate(tqdm(data_tokens)):
-        # feat_sents.append([src_embeddings[src_word2id.get(ix_to_word[ix], src_word2id['UNK'])].tolist() for ix in s_tokens.cpu().numpy()])
-        feat_sents.append([src_embeddings[src_word2id.get(ix_to_word[ix].lower(), src_word2id['unk'])].tolist() for ix in s_tokens.cpu().numpy()])
+        feat_sents.append([src_embeddings[src_word2id.get(ix_to_word[ix], src_word2id['UNK'])].tolist() for ix in s_tokens.cpu().numpy()])
+        # feat_sents.append([src_embeddings[src_word2id.get(ix_to_word[ix].lower(), src_word2id['unk'])].tolist() for ix in s_tokens.cpu().numpy()])
     feat_sents = torch.as_tensor(feat_sents).to(device)
     return feat_sents
 
