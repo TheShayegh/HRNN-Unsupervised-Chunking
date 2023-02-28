@@ -4,8 +4,9 @@ import os
 from copy import deepcopy
 import shutil
 
-N = 3
+N = 10
 M = 10
+CONFIG_NAME = '_config3.yml'
 
 def main(CHEAT_PATH = '../second_order_hiddendim_anal_FA/'):
 
@@ -14,8 +15,10 @@ def main(CHEAT_PATH = '../second_order_hiddendim_anal_FA/'):
         config = yaml.load(f, Loader=yaml.FullLoader)
     home = config['home']
 
-    for i in range(N):
-        os.system(f'cp {CHEAT_PATH}*_embeddings.pt {CHEAT_PATH}*_predicted_* .')
+    for i in range(9,10):
+        # os.system(f'cp {CHEAT_PATH}*_embeddings.pt {CHEAT_PATH}*_predicted_* .')
+
+        print(f"*** i = {i}")
 
         for data in ['train', 'validation', 'test']:
             config_idata = deepcopy(config)
@@ -36,10 +39,10 @@ def main(CHEAT_PATH = '../second_order_hiddendim_anal_FA/'):
             if os.path.exists('../../'+config_idata['target_path']):
                 continue
         
-            with open("_config.yml", 'w') as f:
+            with open(CONFIG_NAME, 'w') as f:
                 f.write(yaml.dump(config_idata))
 
-            command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 use_script.py {home}_config.yml'
+            command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 use_script.py {home}{CONFIG_NAME}'
             print("*****", command)
             x = os.system(command)
             if x:
@@ -49,29 +52,33 @@ def main(CHEAT_PATH = '../second_order_hiddendim_anal_FA/'):
 
         for j in range(M):
 
-            print(f"*** j = {j}")
+            print(f"*** i = {i}, j = {j}")
             config_ij = deepcopy(config)
             config_ij['test_output_path'] = config['test_output_path'].format(i, j)
             config_ij['best_model_path'] = config['best_model_path'].format(i, j)
             for data in ['train', 'validation', 'test']:
                 config_ij[data+'_data'] = config['target_path'].format(home, data, i)
 
-            with open("_config.yml", 'w') as f:
+            with open(CONFIG_NAME, 'w') as f:
                 f.write(yaml.dump(config_ij))
 
-            command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 train_script.py {home}_config.yml'
-            print("*****", command)
-            x = os.system(command)
-            if x:
-                print(x)
-                exit(x)
+            if not os.path.exists(config_ij['best_model_path']):
 
-            command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 test_script.py {home}_config.yml'
-            print("*****", command)
-            x = os.system(command)
-            if x:
-                print(x)
-                exit(x)
+                command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 train_script.py {home}{CONFIG_NAME}'
+                print("*****", command)
+                x = os.system(command)
+                if x:
+                    print(x)
+                    exit(x)
+
+            if not os.path.exists(config_ij['test_output_path']):
+            
+                command = f'cd ../../ && CUDA_VISIBLE_DEVICES={sys.argv[2]} python3 test_script.py {home}{CONFIG_NAME}'
+                print("*****", command)
+                x = os.system(command)
+                if x:
+                    print(x)
+                    exit(x)
 
 
 if __name__ == "__main__":

@@ -1,20 +1,19 @@
-home: "experiments/fa_trained_on_en_output_mullingbert/"
+home: "experiments/fa_trained_on_endue_output_mullingbert/"
 
-train_data: "experiments/fa_trained_on_en_output_mullingbert/train.pkl"
-validation_data: "experiments/fa_trained_on_en_output_mullingbert/test.pkl"
+train_data: "experiments/fa_trained_on_endue_output_mullingbert/train.pkl"
+validation_data: "experiments/fa_trained_on_endue_output_mullingbert/test.pkl"
 validation_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 test_data: "HRNNdata_fa/test.pkl"
 test_true_tags: "HRNNdata_fa/test_tag.pkl"
 
 device: 'cuda:0'
-embedding_dim: 300
+embedding_dim: 768
 hidden_dim: 100
 learning_rate: 0.00002
 warmup: 0
 epocs: 1
-# embedding_mode: "Bert"
-embedding_mode: "file"
+embedding_mode: "Bert"
 train_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/FA.txt"
 val_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/FA.txt"
 test_embedding_path: "./fixed_word_embeddings/en_fa_word_embeddings/FA.txt"

@@ -9,7 +9,7 @@ sys.path.insert(1, '../../')
 from library.HRNN import eval_conll2000
 from eval_heuristic import eval_hu
 
-N = 3
+N = 10
 M = 10
 
 def main():

@@ -1,5 +1,5 @@
 bert_pretrained_weights: HooshvareLab/bert-fa-zwnj-base
-best_model_path: best_model_2_9.pt
+best_model_path: best_model_6_9.pt
 device: cuda:0
 embedding_dim: 768
 embedding_mode: Bert
@@ -18,13 +18,13 @@ pretrained_model: ''
 source_config: ../first_order_stablity_anal_100/config.yml
 source_model_path: ../first_order_stablity_anal_100/best_model_{}.pt
 target_path: '{}{}_predicted_{}.pkl'
-test_data: experiments/second_order_stability_anal_FA/test_predicted_2.pkl
+test_data: experiments/second_order_stability_anal_FA/test_predicted_6.pkl
 test_embedding_path: ''
 test_embeddings: test_word_embeddings.pt
 test_mode: normal
-test_output_path: test_2_9.out
+test_output_path: test_6_9.out
 test_true_tags: HRNNdata_fa/test_tag.pkl
-train_data: experiments/second_order_stability_anal_FA/train_predicted_2.pkl
+train_data: experiments/second_order_stability_anal_FA/train_predicted_6.pkl
 train_embedding_path: ''
 train_embeddings: train_word_embeddings.pt
 train_loss: ''
@@ -33,7 +33,7 @@ use_embeddings: ''
 use_mode: normal
 val_embedding_path: ''
 validation_checkpoints_path: ''
-validation_data: experiments/second_order_stability_anal_FA/validation_predicted_2.pkl
+validation_data: experiments/second_order_stability_anal_FA/validation_predicted_6.pkl
 validation_embeddings: validation_word_embeddings.pt
 validation_metrics: ''
 validation_mode: normal
